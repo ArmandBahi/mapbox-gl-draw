@@ -43,11 +43,9 @@ export default function Snapping(ctx) {
     const newLayers = this.snappableLayers();
     this.bufferLayers
       .filter((l) => newLayers.indexOf(l) < 0)
-      .map((l) => (console.log(`Remove snap buffer ${l.id}`), l))
       .forEach((l) => this.removeSnapBuffer(l));
     newLayers
       .filter((l) => this.bufferLayers.indexOf(l) < 0)
-      .map((l) => (console.log(`Add snap buffer ${l.id}`), l))
       .forEach((l) => this.addSnapBuffer(l));
     this.bufferLayers = newLayers;
   };
@@ -102,12 +100,12 @@ Snapping.prototype.setSnapHoverState = function (f, state) {
   }
 };
 
-function getBufferLayerId(layerId) {
+Snapping.prototype.getBufferLayerId = function (layerId) {
   return `_snap_buffer_${layerId}`;
 }
 
 Snapping.prototype.addSnapBuffer = function (layerId) {
-  const bufferLayerId = getBufferLayerId(layerId);
+  const bufferLayerId = this.getBufferLayerId(layerId);
   const layerDef = this.map.getLayer(layerId);
   if (!layerDef) {
     console.error(`Layer ${layerId} does not exist in map; can't snap to it.`);
@@ -157,10 +155,13 @@ Snapping.prototype.addSnapBuffer = function (layerId) {
 };
 
 Snapping.prototype.removeSnapBuffer = function (layerId) {
-  const bufferLayerId = getBufferLayerId(layerId);
-  this.map.off("mouseover", bufferLayerId, this.mouseoverHandler);
-  this.map.off("mouseout", bufferLayerId, this.mouseoutHandler);
-  this.map.removeLayer(bufferLayerId);
+  const bufferLayerId = this.getBufferLayerId(layerId);
+  const bufferLayer = this.map.getLayer(bufferLayerId);
+  if (bufferLayer) {
+    this.map.off("mouseover", bufferLayerId, this.mouseoverHandler);
+    this.map.off("mouseout", bufferLayerId, this.mouseoutHandler);
+    this.map.removeLayer(bufferLayerId);
+  }
 };
 
 Snapping.prototype.enableSnapping = function () {
