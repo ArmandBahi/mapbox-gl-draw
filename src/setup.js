@@ -3,6 +3,7 @@ import Store from './store';
 import ui from './ui';
 import * as Constants from './constants';
 import xtend from 'xtend';
+import Snapping from './snapping';
 
 export default function(ctx) {
 
@@ -24,6 +25,7 @@ export default function(ctx) {
       ctx.map = null;
       ctx.container = null;
       ctx.store = null;
+      ctx.snapping.disableSnapping();
 
       if (controlContainer && controlContainer.parentNode) controlContainer.parentNode.removeChild(controlContainer);
       controlContainer = null;
@@ -34,6 +36,7 @@ export default function(ctx) {
       ctx.map.off('load', setup.connect);
       clearInterval(mapLoadedInterval);
       setup.addLayers();
+      (new Snapping(ctx)).enableSnapping();
       ctx.store.storeMapConfig();
       ctx.events.addEventListeners();
     },

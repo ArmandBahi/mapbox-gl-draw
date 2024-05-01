@@ -15,7 +15,13 @@ const defaultOptions = {
   styles,
   modes,
   controls: {},
-  userProperties: false
+  userProperties: false,
+  snapLayers: [],
+  snapFeatureFilter: undefined,
+  snapDistance: 20,
+  snapping: {
+    layers: [],
+  },
 };
 
 const showControls = {
