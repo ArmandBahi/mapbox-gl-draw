@@ -107,11 +107,13 @@ function getBufferLayerId(layerId) {
 }
 
 Snapping.prototype.addSnapBuffer = function (layerId) {
-  console.log("snap on ", layerId);
   const bufferLayerId = getBufferLayerId(layerId);
   const layerDef = this.map.getLayer(layerId);
   if (!layerDef) {
     console.error(`Layer ${layerId} does not exist in map; can't snap to it.`);
+    return;
+  }
+  if (this.map.getLayer(bufferLayerId)) {
     return;
   }
   const newLayer = {
@@ -162,7 +164,6 @@ Snapping.prototype.removeSnapBuffer = function (layerId) {
 };
 
 Snapping.prototype.enableSnapping = function () {
-  console.log("snap on");
   this.snappableLayers().forEach((l) => this.addSnapBuffer(l));
   this.map.addSource("_snap_vertex", {
     type: "geojson",
