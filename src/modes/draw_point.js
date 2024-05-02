@@ -64,4 +64,8 @@ DrawPoint.onKeyUp = function(state, e) {
   }
 };
 
+DrawPoint.onMouseMove = function(state, e) {
+  this._ctx.snapping.snapCoord(e.lngLat);
+};
+
 export default DrawPoint;
