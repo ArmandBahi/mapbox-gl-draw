@@ -35,6 +35,14 @@ export default function Snapping(ctx) {
     this.clearSnapCoord();
   };
 
+  this.ctx.api.enableSnapping = () => {
+    this.enableSnapping();
+  };
+
+  this.ctx.api.disableSnapping = () => {
+    this.disableSnapping();
+  };
+
   this.map.on("styledata", () => {
     this.updateSnapLayers();
   });
