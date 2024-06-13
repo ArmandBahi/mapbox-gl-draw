@@ -174,6 +174,12 @@ Snapping.prototype.removeSnapBuffer = function (layerId) {
 
 Snapping.prototype.enableSnapping = function () {
   this.snappableLayers().forEach((l) => this.addSnapBuffer(l));
+  if (this.map.getLayer('_snap_vertex')) {
+    this.map.removeLayer("_snap_vertex");
+  }
+  if (this.map.getSource('_snap_vertex')) {
+    this.map.removeSource("_snap_vertex");
+  }
   this.map.addSource("_snap_vertex", {
     type: "geojson",
     data: {
@@ -197,8 +203,12 @@ Snapping.prototype.enableSnapping = function () {
 
 Snapping.prototype.disableSnapping = function () {
   this.snappableLayers().forEach((l) => this.removeSnapBuffer(l));
-  this.map.removeLayer("_snap_vertex");
-  this.map.removeSource("_snap_vertex");
+  if (this.map.getLayer('_snap_vertex')) {
+    this.map.removeLayer("_snap_vertex");
+  }
+  if (this.map.getSource('_snap_vertex')) {
+    this.map.removeSource("_snap_vertex");
+  }
 };
 
 Snapping.prototype.snappableLayers = function () {
@@ -229,7 +239,9 @@ Snapping.prototype.snapCoord = function snapCoord(lngLat, featureFilter) {
     } else {
       snapPoint = turf.nearestPointOnLine(this.snappedGeometry, hoverPoint);
     }
-    this.map.getSource("_snap_vertex").setData(snapPoint);
+    if (this.map.getSource("_snap_vertex")) {
+      this.map.getSource("_snap_vertex").setData(snapPoint);
+    }
     return {
       lng: snapPoint.geometry.coordinates[0],
       lat: snapPoint.geometry.coordinates[1],
